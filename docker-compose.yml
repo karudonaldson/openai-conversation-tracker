@@ -1,22 +1,25 @@
-version: '3.8'
-
+version: "3.8"
 services:
   backend:
     build: .
     ports:
-      - "5000:5000"
-    env_file:
-      - .env
-    depends_on:
-      - mongo
+      - "5000:5000"  # Exposes the port to the host machine
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/chatdb
+    networks:
+      - app_network
 
   mongo:
     image: mongo:5.0
-    restart: always
-    ports:
-      - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks:
+      - app_network
 
 volumes:
   mongo_data:
+
+networks:
+  app_network:
+    driver: bridge
+
