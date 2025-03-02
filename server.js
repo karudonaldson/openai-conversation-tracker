@@ -1,23 +1,32 @@
 const express = require("express");
-const cors = require("cors");
+const mongoose = require("mongoose");
+require("dotenv").config();
 
 const app = express();
-app.use(cors()); // Allow CORS for frontend requests
-app.use(express.json()); // Parse JSON bodies
+app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Server is running!");
-});
+mongoose
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("✅ MongoDB Connected"))
+  .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
-app.post("/api/chat", (req, res) => {
+app.get("/", (req, res) => res.send("Server is running!"));
+
+// 🔹 Add this API route
+app.post("/api/chat", async (req, res) => {
   const { message } = req.body;
+
   if (!message) {
-    return res.status(400).json({ error: "Message is required" });
+    return res.status(400).json({ error: "Message text is required" });
   }
-  res.json({ reply: `You said: ${message}` }); // Example response
+
+  console.log(`User: ${message}`);
+
+  // Mock response for now
+  const botReply = `Echo: ${message}`;
+  res.json({ reply: botReply });
 });
 
 const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-//app.listen(PORT, "0.0.0.0", () => console.log(`🚀 Server running on port ${PORT}`));
-app.listen(PORT, "172.31.174.126", () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+// app.listen(PORT, "0.0.0.0", () => console.log(`🚀 Server running on port ${PORT}`));
