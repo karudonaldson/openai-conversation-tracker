@@ -14,7 +14,13 @@ mongoose
   .then(() => console.log("✅ MongoDB Connected"))
   .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
-app.get("/", (req, res) => res.send("Server is running!"));
+// app.get("/", (req, res) => res.send("Server is running!"));
+app.get("/debug", (req, res) => {
+  const os = require("os");
+  const interfaces = os.networkInterfaces();
+  res.json({ interfaces });
+});
+
 
 // 🔹 Chat API Route (Recheck This)
 app.post("/api/chat", (req, res) => {
@@ -34,22 +40,16 @@ const os = require('os');
 const getNetworkIPs = () => {
   const nets = os.networkInterfaces();
   const results = [];
-
   for (const name of Object.keys(nets)) {
     for (const net of nets[name]) {
-      if (net.family === 'IPv4' && !net.internal) {
+      if (net.family === "IPv4" && !net.internal) {
         results.push(net.address);
       }
     }
   }
-
   return results;
 };
 
-const PORT = process.env.PORT || 5000;
-const HOST = '0.0.0.0';
-
-//app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-app.listen(PORT, HOST, () => {
-  console.log(`🚀 Server running on http://${HOST}:${PORT} (Available at: ${getNetworkIPs().join(', ')})`);
+app.listen(5000, "0.0.0.0", () => {
+  console.log(`🚀 Server running on: ${getNetworkIPs().join(", ")}`);
 });

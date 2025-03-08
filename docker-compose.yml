@@ -1,24 +1,15 @@
 services:
   backend:
     build: .
-    ports:
-      - "0.0.0.0:5000:5000" # Exposes the port to the host machine
+    network_mode: "host" # ✅ Use the host network
     environment:
-      - MONGO_URI=mongodb://mongo:27017/chatdb
-    networks:
-      - app_network
+      - MONGO_URI=mongodb://localhost:27017/chatdb # 🔹 Use localhost since it's on the host network
 
   mongo:
     image: mongo:5.0
+    network_mode: "host" # ✅ MongoDB also needs to use host network
     volumes:
       - mongo_data:/data/db
-    networks:
-      - app_network
 
 volumes:
   mongo_data:
-
-networks:
-  app_network:
-    driver: bridge
-
