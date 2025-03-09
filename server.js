@@ -10,8 +10,11 @@ app.use(express.json());
 app.use(bodyParser.json()); // 🔹 (Backup in case Express' built-in parser isn't working)
 
 mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("✅ MongoDB Connected"))
+  .connect(process.env.MONGO_URI || "mongodb://localhost:27017/conversationsDB", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("✅ MongoDB Connected to:", process.env.MONGO_URI || "mongodb://localhost:27017/conversationsDB"))
   .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
 // app.get("/", (req, res) => res.send("Server is running!"));

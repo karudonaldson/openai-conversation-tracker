@@ -3,7 +3,7 @@ services:
     build: .
     network_mode: "host" # ✅ Use the host network
     environment:
-      - MONGO_URI=mongodb://localhost:27017/chatdb # 🔹 Use localhost since it's on the host network
+      - MONGO_URI=mongodb://localhost:27017/conversationsDB # 🔹 Use localhost since it's on the host network
 
   mongo:
     image: mongo:5.0
